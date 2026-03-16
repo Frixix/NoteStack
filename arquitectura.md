@@ -96,16 +96,19 @@ La aplicación sigue una arquitectura modular simple:
 Usuario
    │
    ▼
-Interfaz (UI)
+UI (HTML + CSS)
    │
    ▼
-Controladores (JavaScript)
+Controllers
    │
    ▼
-Servicios
+Services
    │
    ▼
-Almacenamiento (LocalStorage / JSON)
+Storage Service
+   │
+   ▼
+LocalStorage
 ```
 
 ---
@@ -153,6 +156,7 @@ notestack/
 │   └── style.css
 │
 ├── js/
+│   │
 │   ├── app.js
 │   │
 │   ├── controllers/
@@ -161,7 +165,11 @@ notestack/
 │   │
 │   ├── services/
 │   │   ├── noteService.js
+│   │   ├── notebookService.js
 │   │   └── storageService.js
+│   │
+│   ├── state/
+│   │   └── appState.js
 │   │
 │   └── utils/
 │       └── helpers.js

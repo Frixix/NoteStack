@@ -16,26 +16,34 @@
 
 <div class="app">
 
+    <!-- Sidebar -->
     <aside class="sidebar">
 
         <h1 class="logo">NOTESTACK</h1>
-
-        <div class="notebooks">
-
-            <h2>Cuadernos</h2>
-
-            <ul id="notebook-list">
-                <!-- notebooks -->
-            </ul>
-
-        </div>
 
         <button id="new-notebook">
             + Nuevo cuaderno
         </button>
 
+        <ul id="notebook-list"></ul>
+
     </aside>
 
+
+    <!-- Lista de notas -->
+    <section class="notes-panel">
+
+        <div class="notes-header">
+            <h2>Notas</h2>
+            <button id="new-note">+</button>
+        </div>
+
+        <ul id="note-list"></ul>
+
+    </section>
+
+
+    <!-- Editor -->
     <main class="editor">
 
         <input
@@ -46,15 +54,14 @@
 
         <textarea
             id="note-content"
-            placeholder="Escribe tu nota..."
+            placeholder="Empieza a escribir..."
         ></textarea>
 
     </main>
 
 </div>
 
-<script src="js/app.js"></script>
+<script type="module" src="js/app.js"></script>
 
 </body>
-
 </html>
