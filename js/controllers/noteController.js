@@ -1,4 +1,15 @@
 // noteController.js
+function debounce(func, delay) {
+    let timeout;
+
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
 
 // Obtener elementos del DOM
 const newNoteBtn = document.getElementById("new-note");
@@ -40,6 +51,11 @@ function renderNotes() {
         const li = document.createElement("li");
         li.textContent = note.title || "Sin título";
 
+        // ✅ Marcar nota activa
+        if (note.id === currentNoteId) {
+            li.classList.add("active");
+        }
+
         li.addEventListener("click", () => {
             loadNote(note.id);
         });
@@ -58,9 +74,10 @@ function loadNote(id) {
 
     noteTitle.value = note.title;
     noteContent.value = note.content;
+    renderNotes(); //  actualiza la UI
 }
 
-// Guardar cambios de la nota actual
+
 function saveCurrentNote() {
     if (!currentNoteId) return;
 
@@ -69,7 +86,7 @@ function saveCurrentNote() {
         content: noteContent.value
     });
 
-    renderNotes(); // para actualizar títulos en la lista
+    updateActiveNoteTitle(); // 🔥 cambio clave
 }
 
 // Exportar inicializador
