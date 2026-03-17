@@ -1,64 +1,31 @@
-const STORAGE_KEY = "notestack_db";
+const storageService = (function () {
 
+    const STORAGE_KEY = "notestack_db";
 
-function initDB(){
+    function getDB() {
 
-    const data = localStorage.getItem(STORAGE_KEY);
+        let db = localStorage.getItem(STORAGE_KEY);
 
-    if(!data){
+        if (!db) {
 
-        const initialData = {
-            notebooks: [],
-            notes: []
-        };
+            db = {
+                notebooks: [],
+                notes: []
+            };
 
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(initialData)
-        );
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+        }
 
+        return JSON.parse(localStorage.getItem(STORAGE_KEY));
     }
 
-}
+    function saveDB(db) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+    }
 
-
-function getDB(){
-
-    const data = localStorage.getItem(STORAGE_KEY);
-
-    return JSON.parse(data);
-
-}
-
-
-function saveDB(data){
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(data)
-    );
-
-}
-
-
-function resetDB(){
-
-    const emptyDB = {
-        notebooks: [],
-        notes: []
+    return {
+        getDB,
+        saveDB
     };
 
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(emptyDB)
-    );
-
-}
-
-
-export default {
-    initDB,
-    getDB,
-    saveDB,
-    resetDB
-};
+})();
