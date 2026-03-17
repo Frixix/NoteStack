@@ -1,179 +1,240 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family: "Segoe UI", Arial, sans-serif;
+/* ===== MEJORAS INSPIRADAS EN OBSIDIAN ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Mejora: Tipografía más moderna y legible, similar a la de Obsidian */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-body{
-height:100vh;
-background:#1e1e1e;
-color:#e4e4e4;
+body {
+    height: 100vh;
+    background: #1e1e1e; /* Fondo base sólido */
+    color: #e4e4e4;
 }
 
 /* APP LAYOUT */
-
-.app{
-
-display:flex;
-height:100vh;
-
+.app {
+    display: flex;
+    height: 100vh;
 }
 
-/* SIDEBAR */
-
-.sidebar{
-
-width:220px;
-background:#191919;
-
-padding:15px;
-
-display:flex;
-flex-direction:column;
-gap:15px;
-
-border-right:1px solid #2a2a2a;
-
+/* ===== SIDEBAR (CUADERNO) ===== */
+.sidebar {
+    width: 240px; /* Un poco más ancho para dar más espacio */
+    background: #181818; /* Un tono ligeramente más oscuro y rico */
+    padding: 16px 12px; /* Padding más generoso */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #2a2a2a;
 }
 
-.logo{
-
-font-size:18px;
-font-weight:bold;
-
+.logo {
+    font-size: 18px;
+    font-weight: 600; /* Un peso de fuente más definido */
+    letter-spacing: -0.02em; /* Ajuste sutil para un look más moderno */
+    padding-left: 4px;
+    color: #ffffff;
 }
 
-#new-notebook{
-
-background:#2a2a2a;
-border:none;
-color:white;
-
-padding:6px;
-cursor:pointer;
-border-radius:4px;
-
+/* Mejora: Botón "Nuevo Cuaderno" con estilo más cuidado */
+#new-notebook {
+    background: transparent; /* Fondo transparente por defecto */
+    border: 1px solid #3a3a3a; /* Borde sutil en lugar de fondo sólido */
+    color: #e4e4e4;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 6px; /* Bordes ligeramente más redondeados */
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.15s ease; /* Transición suave para el hover */
 }
 
-#new-notebook:hover{
-
-background:#3a3a3a;
-
+#new-notebook:hover {
+    background: #2a2a2a; /* Fondo sutil al hacer hover */
+    border-color: #4a4a4a; /* Borde un poco más claro */
 }
 
-#notebook-list{
-
-list-style:none;
-
+#new-notebook::before {
+    content: "+ "; /* Un pequeño indicador visual */
+    font-weight: 600;
+    margin-right: 4px;
 }
 
-#notebook-list li{
-
-padding:6px;
-border-radius:4px;
-cursor:pointer;
-
+#notebook-list {
+    list-style: none;
+    margin-top: -5px; /* Ajuste fino de espaciado */
 }
 
-#notebook-list li:hover{
-
-background:#2f2f2f;
-
+/* Mejora: Items de la lista con padding más generoso y bordes redondeados */
+#notebook-list li {
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #b0b0b0; /* Color ligeramente más tenue para los inactivos */
+    transition: background 0.1s ease;
+    margin-bottom: 2px;
 }
 
-/* PANEL DE NOTAS */
-
-.notes-panel{
-
-width:240px;
-
-background:#202020;
-
-border-right:1px solid #2a2a2a;
-
-display:flex;
-flex-direction:column;
-
+#notebook-list li:hover {
+    background: #2a2a2a;
+    color: #ffffff; /* Texto más brillante al hacer hover */
 }
 
-.notes-header{
-
-display:flex;
-justify-content:space-between;
-
-padding:10px;
-
-border-bottom:1px solid #2a2a2a;
-
+/* Mejora: Indicador visual para el cuaderno activo (simulado, necesitarías JS para cambiarlo dinámicamente) */
+#notebook-list li.active {
+    background: #2e2e2e;
+    color: #ffffff;
+    font-weight: 500;
+    border-left: 2px solid #6b9bff; /* Un toque de color (el azul característico de Obsidian) */
 }
 
-#note-list{
-
-list-style:none;
-padding:10px;
-
+/* ===== PANEL DE NOTAS ===== */
+.notes-panel {
+    width: 260px; /* Un poco más ancho */
+    background: #1e1e1e; /* Fondo continuo con el body, pero diferenciado por bordes */
+    border-right: 1px solid #2a2a2a;
+    display: flex;
+    flex-direction: column;
 }
 
-#note-list li{
-
-padding:8px;
-border-radius:5px;
-cursor:pointer;
-
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Alinear verticalmente */
+    padding: 16px 14px;
+    border-bottom: 1px solid #2a2a2a;
 }
 
-#note-list li:hover{
-
-background:#2f2f2f;
-
+/* Mejora: Botón "Nueva Nota" con estilo refinado */
+#new-note {
+    background: #6b9bff; /* Un azul vibrante pero no estridente, como en Obsidian */
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil para dar profundidad */
 }
 
-/* EDITOR */
-
-.editor{
-
-flex:1;
-
-display:flex;
-flex-direction:column;
-
-padding:30px;
-
-background:#1e1e1e;
-
+#new-note:hover {
+    background: #5a82e0; /* Oscurecer ligeramente en hover */
 }
 
-#note-title{
-
-font-size:28px;
-
-background:none;
-border:none;
-
-color:white;
-
-margin-bottom:15px;
-
-outline:none;
-
+/* Si no existe el botón en tu HTML, podrías tener un span con texto, pero mejor tener un <button> */
+.notes-header span { /* Asumiendo que es el título "Notas" */
+    font-size: 14px;
+    font-weight: 500;
+    color: #cccccc;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
-#note-content{
+#note-list {
+    list-style: none;
+    padding: 12px 10px;
+    overflow-y: auto; /* Por si hay muchas notas */
+}
 
-flex:1;
+/* Mejora: Items de la lista de notas más espaciados y con mejor feedback visual */
+#note-list li {
+    padding: 10px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 4px;
+    border-left: 2px solid transparent; /* Reservar espacio para el borde de activo */
+    transition: background 0.1s ease;
+    color: #d4d4d4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Para títulos largos */
+}
 
-background:none;
-border:none;
+#note-list li:hover {
+    background: #2a2a2a;
+}
 
-color:#ddd;
+/* Mejora: Nota activa en el panel */
+#note-list li.active {
+    background: #2e2e2e;
+    border-left-color: #6b9bff; /* El mismo azul para consistencia */
+    color: #ffffff;
+    font-weight: 500;
+}
 
-font-size:16px;
+/* ===== EDITOR ===== */
+.editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 50px; /* Padding más generoso para una experiencia de escritura cómoda */
+    background: #1e1e1e;
+    max-width: 900px; /* Un ancho máximo para que las líneas no sean infinitamente largas (mejor legibilidad) */
+    margin: 0 auto; /* Centrar el editor si hay espacio extra */
+    width: 100%;
+}
 
-line-height:1.6;
+#note-title {
+    font-size: 32px; /* Un poco más grande para dar énfasis */
+    font-weight: 600;
+    background: none;
+    border: none;
+    color: #ffffff;
+    margin-bottom: 20px;
+    outline: none;
+    padding: 5px 0; /* Pequeño padding para área de click */
+    letter-spacing: -0.02em;
+}
 
-resize:none;
+#note-title::placeholder {
+    color: #555; /* Placeholder más visible pero tenue */
+    font-weight: 400;
+}
 
-outline:none;
+#note-content {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #d4d4d4;
+    font-size: 16px;
+    line-height: 1.7; /* Un poco más de altura de línea para mejor lectura */
+    resize: none;
+    outline: none;
+    padding: 5px 0;
+    font-family: 'Inter', 'Segoe UI', monospace; /* Una fuente mono para el contenido? O la misma Inter. Depende del gusto. */
+}
 
+#note-content::placeholder {
+    color: #555;
+}
+
+/* Pequeño detalle: scrollbar más estilizado (opcional, para navegadores webkit) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3a3a3a;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a4a4a;
+}
+#note-list li.active {
+    background-color: #2c2c2c;
+    color: #fff;
+    border-left: 3px solid #7c3aed;
 }
