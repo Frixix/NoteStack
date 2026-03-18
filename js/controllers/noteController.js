@@ -1,4 +1,5 @@
 // noteController.js
+
 function debounce(func, delay) {
     let timeout;
 
@@ -9,7 +10,6 @@ function debounce(func, delay) {
         }, delay);
     };
 }
-
 
 // Obtener elementos del DOM
 const newNoteBtn = document.getElementById("new-note");
@@ -36,9 +36,11 @@ function initNoteController() {
         loadNote(newNote.id);
     });
 
-    // Evento: guardar cambios (autosave básico)
-    noteTitle.addEventListener("input", saveCurrentNote);
-    noteContent.addEventListener("input", saveCurrentNote);
+    // Evento: guardar cambios (autosave optimizado)
+    const debouncedSave = debounce(saveCurrentNote, 500);
+
+    noteTitle.addEventListener("input", debouncedSave);
+    noteContent.addEventListener("input", debouncedSave);
 }
 
 // Renderizar lista de notas
@@ -51,7 +53,7 @@ function renderNotes() {
         const li = document.createElement("li");
         li.textContent = note.title || "Sin título";
 
-        // ✅ Marcar nota activa
+        // Marcar nota activa
         if (note.id === currentNoteId) {
             li.classList.add("active");
         }
@@ -74,10 +76,11 @@ function loadNote(id) {
 
     noteTitle.value = note.title;
     noteContent.value = note.content;
-    renderNotes(); //  actualiza la UI
+
+    renderNotes(); // refresca UI
 }
 
-
+// Guardar cambios
 function saveCurrentNote() {
     if (!currentNoteId) return;
 
@@ -86,7 +89,16 @@ function saveCurrentNote() {
         content: noteContent.value
     });
 
-    updateActiveNoteTitle(); // 🔥 cambio clave
+    updateActiveNoteTitle();
+}
+
+// Actualizar título en la lista sin re-render completo
+function updateActiveNoteTitle() {
+    const activeLi = noteList.querySelector(".active");
+
+    if (activeLi) {
+        activeLi.textContent = noteTitle.value || "Sin título";
+    }
 }
 
 // Exportar inicializador
