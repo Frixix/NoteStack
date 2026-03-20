@@ -160,6 +160,12 @@ body {
     color: #ffffff; /* Texto más brillante al hacer hover */
 }
 
+#notebook-list li:focus-visible,
+#note-list li:focus-visible {
+    outline: 2px solid #6b9bff;
+    outline-offset: 2px;
+}
+
 /* Mejora: Indicador visual para el cuaderno activo (simulado, necesitarías JS para cambiarlo dinámicamente) */
 #notebook-list li.active {
     background: #2e2e2e;

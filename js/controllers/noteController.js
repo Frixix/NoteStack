@@ -11,6 +11,18 @@ function debounce(func, delay) {
     };
 }
 
+function attachKeyboardSelection(element, onSelect) {
+    element.setAttribute("role", "button");
+    element.tabIndex = 0;
+
+    element.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onSelect();
+        }
+    });
+}
+
 // Obtener elementos del DOM
 const newNoteBtn = document.getElementById("new-note");
 const noteList = document.getElementById("note-list");
@@ -99,15 +111,19 @@ function renderNotebooks() {
         const li = document.createElement("li");
         li.textContent = nb.name;
 
-        li.addEventListener("click", () => {
+        const selectNotebook = () => {
             currentNotebookId = nb.id;
             renderNotes();
             renderNotebooks();
             syncEditorWithSelection();
-        });
+        };
+
+        li.addEventListener("click", selectNotebook);
+        attachKeyboardSelection(li, selectNotebook);
 
         if (nb.id === currentNotebookId) {
             li.classList.add("active");
+            li.setAttribute("aria-current", "true");
         }
 
         notebookList.appendChild(li);
@@ -128,13 +144,17 @@ function renderNotes() {
         const li = document.createElement("li");
         li.textContent = note.title || "Sin título";
 
+        const selectNote = () => {
+            loadNote(note.id);
+        };
+
         if (note.id === currentNoteId) {
             li.classList.add("active");
+            li.setAttribute("aria-current", "true");
         }
 
-        li.addEventListener("click", () => {
-            loadNote(note.id);
-        });
+        li.addEventListener("click", selectNote);
+        attachKeyboardSelection(li, selectNote);
 
         noteList.appendChild(li);
     });

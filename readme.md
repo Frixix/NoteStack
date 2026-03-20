@@ -1,89 +1,82 @@
 # NOTESTACK
 
-NOTESTACK es una aplicación web ligera diseñada para organizar notas técnicas y cuadernos digitales orientados a estudiantes de ingeniería en sistemas.
+NOTESTACK es una SPA ligera para organizar notas en cuadernos, construida con tecnologías web nativas.
 
-El objetivo del proyecto es crear un sistema de conocimiento personal donde sea posible almacenar, organizar y consultar apuntes de diferentes áreas como programación, redes, ciberseguridad y sistemas operativos.
+## Lo que hace hoy
 
----
+* Crear cuadernos
+* Renombrar cuadernos
+* Eliminar cuadernos y sus notas asociadas
+* Crear notas
+* Editar título y contenido
+* Eliminar notas
+* Buscar notas por título o contenido
+* Guardar cambios automáticamente en LocalStorage
 
-## Características
-
-* Gestión de cuadernos
-* Creación y edición de notas
-* Organización por etiquetas
-* Búsqueda rápida
-* Almacenamiento local
-* Interfaz minimalista enfocada en productividad
-
----
-
-## Tecnologías utilizadas
+## Tecnologías
 
 * HTML5
 * CSS3
-* JavaScript (Vanilla JS)
+* JavaScript Vanilla
 * LocalStorage
-
----
 
 ## Arquitectura
 
-La aplicación sigue una arquitectura modular basada en componentes:
+La aplicación sigue esta estructura:
 
-UI → Controllers → Services → Storage
+UI -> Controller -> Services -> Storage
 
-Esto permite mantener el código organizado y escalable.
+Archivos principales:
 
----
+* `index.html`
+* `css/style.css`
+* `js/app.js`
+* `js/controllers/noteController.js`
+* `js/services/storageService.js`
+* `js/services/noteService.js`
+* `js/services/notebookService.js`
 
-## Estructura del proyecto
-
-```
-notestack/
-│
-├── index.html
-├── README.md
-│
-├── css/
-├── js/
-│   ├── controllers/
-│   ├── services/
-│   └── utils/
-│
-├── components/
-├── assets/
-└── data/
-```
-
----
-
-## Entidades principales
+## Datos principales
 
 ### Notebook
 
-Representa un cuaderno que agrupa varias notas.
+```json
+{
+  "id": "uuid",
+  "name": "Redes",
+  "createdAt": "timestamp"
+}
+```
 
 ### Note
 
-Representa una nota individual asociada a un cuaderno.
+```json
+{
+  "id": "uuid",
+  "title": "Modelo OSI",
+  "content": "contenido de la nota...",
+  "notebookId": "uuid",
+  "createdAt": "timestamp",
+  "updatedAt": "timestamp"
+}
+```
 
----
+## Verificación manual
 
-## Futuras mejoras
+Checklist rápida para validar la app:
 
-* Editor Markdown
-* Resaltado de sintaxis para código
-* Sincronización en la nube
-* Exportación a PDF
-* Aplicación instalable (PWA)
+* Crear un cuaderno nuevo
+* Renombrar un cuaderno
+* Eliminar un cuaderno y confirmar que sus notas desaparecen
+* Crear una nota
+* Editar título y contenido
+* Recargar la página y confirmar persistencia
+* Buscar una nota por texto
+* Eliminar una nota
 
----
+## Propósito
 
-## Propósito del proyecto
-
-Este proyecto tiene como objetivo servir como sistema de gestión de conocimiento personal para estudios en ingeniería en sistemas, además de funcionar como práctica de desarrollo web.
-
----
+El proyecto está pensado como práctica de desarrollo frontend y como pieza de portafolio con una arquitectura simple, clara y fácil de explicar.
 
 ## Licencia
 

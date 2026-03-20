@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <ul id="notebook-list"></ul>
+        <ul id="notebook-list" aria-label="Lista de cuadernos"></ul>
 
         <div class="sidebar-actions">
             <button id="rename-notebook" type="button" class="ghost-button" title="Renombrar cuaderno activo">
@@ -63,7 +63,7 @@
                 <button id="delete-note" type="button" class="ghost-button" title="Eliminar nota activa">
                     Eliminar
                 </button>
-                <button id="new-note">+</button>
+                <button id="new-note" type="button" aria-label="Crear nueva nota">+</button>
             </div>
         </div>
 
@@ -76,8 +76,8 @@
             >
         </div>
 
-        <ul id="note-list"></ul>
-        <div id="notes-empty-state" class="empty-state hidden">
+        <ul id="note-list" aria-label="Lista de notas"></ul>
+        <div id="notes-empty-state" class="empty-state hidden" aria-live="polite">
             <p id="notes-empty-title" class="empty-state-title"></p>
             <p id="notes-empty-message" class="empty-state-message"></p>
         </div>
