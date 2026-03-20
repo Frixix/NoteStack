@@ -1,0 +1,459 @@
+/* ===== VOID NAVY — Midnight Blue + Deep Black ===== */
+/*
+  PALETA:
+  --bg-void:      #070a12  → Negro azulado puro (fondos más profundos)
+  --bg-base:      #0a0e1a  → Fondo principal del editor
+  --bg-surface:   #0d1220  → Sidebar / paneles laterales
+  --bg-elevated:  #111826  → Cards, inputs, formularios
+  --bg-hover:     #17213a  → Hover states
+  --bg-active:    #1a2642  → Items activos/seleccionados
+  --border-dim:   #141e30  → Bordes muy sutiles
+  --border:       #1c2c44  → Bordes normales
+  --border-lit:   #284060  → Bordes en foco
+  --text-primary: #e0ecff  → Texto principal (azul muy frío)
+  --text-soft:    #8aa4c8  → Texto secundario
+  --text-dim:     #3a5070  → Placeholders, dim
+  --accent:       #4d8ef0  → Azul eléctrico
+  --accent-deep:  #3a76d8  → Hover acento
+  --accent-glow:  rgba(77,142,240,0.15)
+*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'DM Sans', 'Satoshi', -apple-system, 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: #070a12;
+    color: #e0ecff;
+}
+
+/* ===== APP LAYOUT ===== */
+.app {
+    display: flex;
+    height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 240px;
+    /* Negro casi puro con un toque azulado: muy oscuro pero no muerto */
+    background: #080c18;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #141e30;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    padding-left: 4px;
+    color: #e0ecff;
+    text-shadow: 0 0 28px rgba(77, 142, 240, 0.25);
+}
+
+#new-notebook {
+    background: transparent;
+    border: 1px solid #1c2c44;
+    color: #8aa4c8;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+#new-notebook:hover {
+    background: #111826;
+    border-color: #284060;
+    color: #e0ecff;
+}
+
+#new-notebook::before {
+    content: "+ ";
+    font-weight: 700;
+    color: #4d8ef0;
+    margin-right: 3px;
+}
+
+.hidden {
+    display: none;
+}
+
+.notebook-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    /* El formulario usa el negro más puro para resaltar sobre el sidebar */
+    background: #0a0e1a;
+    border: 1px solid #1c2c44;
+    border-radius: 10px;
+}
+
+#notebook-name-input {
+    width: 100%;
+    background: #070a12;
+    border: 1px solid #1c2c44;
+    border-radius: 7px;
+    color: #e0ecff;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#notebook-name-input:focus {
+    border-color: #4d8ef0;
+    box-shadow: 0 0 0 3px rgba(77, 142, 240, 0.15);
+}
+
+.notebook-form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+#save-notebook,
+#cancel-notebook {
+    flex: 1;
+    border: none;
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#save-notebook {
+    background: #4d8ef0;
+    color: #ffffff;
+}
+
+#save-notebook:hover {
+    background: #3a76d8;
+}
+
+#cancel-notebook {
+    background: #111826;
+    color: #8aa4c8;
+    border: 1px solid #1c2c44;
+}
+
+#cancel-notebook:hover {
+    background: #17213a;
+}
+
+#notebook-list {
+    list-style: none;
+    margin-top: -5px;
+}
+
+#notebook-list li {
+    padding: 8px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #627c9c;
+    transition: background 0.1s ease, color 0.1s ease;
+    margin-bottom: 2px;
+    border-left: 2px solid transparent;
+}
+
+#notebook-list li:hover {
+    background: #111826;
+    color: #b8d0f0;
+}
+
+#notebook-list li:focus-visible,
+#note-list li:focus-visible {
+    outline: 2px solid #4d8ef0;
+    outline-offset: 2px;
+}
+
+#notebook-list li.active {
+    background: #17213a;
+    color: #e0ecff;
+    font-weight: 600;
+    border-left-color: #4d8ef0;
+}
+
+.sidebar-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid #141e30;
+}
+
+.sidebar-actions .ghost-button {
+    flex: 1;
+}
+
+/* ===== PANEL DE NOTAS ===== */
+.notes-panel {
+    width: 260px;
+    /* Un paso más claro que la sidebar: negro con más azul */
+    background: #0a0e1a;
+    border-right: 1px solid #141e30;
+    display: flex;
+    flex-direction: column;
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 14px;
+    border-bottom: 1px solid #141e30;
+}
+
+.notes-header span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #3a5070;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.notes-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ghost-button {
+    background: transparent;
+    border: 1px solid #1c2c44;
+    color: #627c9c;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ghost-button:hover {
+    background: #111826;
+    color: #e0ecff;
+    border-color: #284060;
+}
+
+.ghost-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.notes-search {
+    padding: 12px 14px 0;
+}
+
+#note-search {
+    width: 100%;
+    /* Input sobre negro puro para contraste máximo */
+    background: #070a12;
+    border: 1px solid #1c2c44;
+    border-radius: 8px;
+    color: #e0ecff;
+    padding: 9px 12px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#note-search:focus {
+    border-color: #4d8ef0;
+    box-shadow: 0 0 0 3px rgba(77, 142, 240, 0.15);
+}
+
+#note-search::placeholder {
+    color: #2e4460;
+}
+
+#new-note {
+    background: #4d8ef0;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s;
+    box-shadow: 0 2px 10px rgba(77, 142, 240, 0.2);
+}
+
+#new-note:hover {
+    background: #3a76d8;
+    box-shadow: 0 3px 14px rgba(77, 142, 240, 0.32);
+}
+
+#note-list {
+    list-style: none;
+    padding: 12px 10px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+#note-list li {
+    padding: 10px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 4px;
+    border-left: 2px solid transparent;
+    transition: background 0.1s ease, color 0.1s ease;
+    color: #627c9c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#note-list li:hover {
+    background: #111826;
+    color: #b8d0f0;
+}
+
+#note-list li.active {
+    background: #17213a;
+    border-left-color: #4d8ef0;
+    color: #e0ecff;
+    font-weight: 600;
+}
+
+.empty-state {
+    margin: 12px 14px 16px;
+    padding: 14px 14px 16px;
+    border: 1px solid #1c2c44;
+    border-radius: 10px;
+    background: #0a0e1a;
+}
+
+.empty-state-title {
+    color: #b8d0f0;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.empty-state-message {
+    color: #3a5070;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ===== EDITOR ===== */
+.editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 44px 56px;
+    /* El editor es el más oscuro de todos — negro puro con tinte azul */
+    background: #070a12;
+    max-width: 860px;
+    margin: 0 auto;
+    width: 100%;
+    /* Gradiente atmosférico: como luz azul lejana en la oscuridad */
+    background-image:
+        radial-gradient(ellipse 60% 40% at 55% 15%, rgba(77, 142, 240, 0.05) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(30, 60, 120, 0.06) 0%, transparent 60%);
+}
+
+#note-title {
+    font-size: 30px;
+    font-weight: 700;
+    background: none;
+    border: none;
+    color: #e0ecff;
+    margin-bottom: 22px;
+    outline: none;
+    padding: 5px 0 16px;
+    letter-spacing: -0.03em;
+    /* Separador que va de azul a transparente */
+    border-bottom: 1px solid #141e30;
+    transition: border-color 0.2s;
+}
+
+#note-title:focus {
+    border-bottom-color: #4d8ef0;
+}
+
+#note-title::placeholder {
+    color: #1c2c44;
+    font-weight: 400;
+}
+
+#note-content {
+    flex: 1;
+    background: none;
+    border: none;
+    /* Texto ligeramente más tenue que el título para jerarquía */
+    color: #7a9abe;
+    font-size: 15.5px;
+    line-height: 1.85;
+    resize: none;
+    outline: none;
+    padding: 4px 0;
+    font-family: 'DM Mono', 'Fira Code', 'Cascadia Code', monospace;
+    letter-spacing: 0.01em;
+}
+
+#note-content::placeholder {
+    color: #1c2c44;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1c2c44;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #284060;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+    .app {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar,
+    .notes-panel {
+        width: 100%;
+        border-right: none;
+    }
+
+    .sidebar {
+        border-bottom: 1px solid #141e30;
+    }
+
+    .notes-panel {
+        border-bottom: 1px solid #141e30;
+    }
+
+    .editor {
+        padding: 24px 20px;
+        max-width: none;
+        background-image: none;
+    }
+}
