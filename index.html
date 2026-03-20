@@ -53,7 +53,19 @@
             <button id="new-note">+</button>
         </div>
 
+        <div class="notes-search">
+            <input
+                type="search"
+                id="note-search"
+                placeholder="Buscar por titulo o contenido"
+                autocomplete="off"
+            >
+        </div>
+
         <ul id="note-list"></ul>
+        <p id="notes-empty-state" class="empty-state hidden">
+            No hay notas que coincidan con la busqueda actual.
+        </p>
 
     </section>
 

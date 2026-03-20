@@ -16,6 +16,8 @@ const newNoteBtn = document.getElementById("new-note");
 const noteList = document.getElementById("note-list");
 const noteTitle = document.getElementById("note-title");
 const noteContent = document.getElementById("note-content");
+const noteSearch = document.getElementById("note-search");
+const notesEmptyState = document.getElementById("notes-empty-state");
 
 const newNotebookBtn = document.getElementById("new-notebook");
 const notebookList = document.getElementById("notebook-list");
@@ -27,6 +29,7 @@ const cancelNotebookBtn = document.getElementById("cancel-notebook");
 // Estado actual
 let currentNoteId = null;
 let currentNotebookId = null;
+let searchTerm = "";
 
 // Inicializar controller
 function initNoteController() {
@@ -52,6 +55,7 @@ function initNoteController() {
     // Crear nota
     newNoteBtn.addEventListener("click", () => {
         ensureActiveNotebook(true);
+        clearSearch();
 
         const newNote = noteService.createNote(
             "Nueva nota",
@@ -61,6 +65,12 @@ function initNoteController() {
 
         renderNotes();
         loadNote(newNote.id);
+    });
+
+    noteSearch.addEventListener("input", (event) => {
+        searchTerm = event.target.value.trim().toLowerCase();
+        renderNotes();
+        syncEditorWithSelection();
     });
 
     // Autosave optimizado
@@ -97,11 +107,16 @@ function renderNotebooks() {
 
 // Renderizar notas (filtradas por cuaderno)
 function renderNotes() {
-    const notes = currentNotebookId
+    let notes = currentNotebookId
         ? noteService.getNotesByNotebookId(currentNotebookId)
         : noteService.getAllNotes();
 
+    if (searchTerm) {
+        notes = notes.filter(note => matchesSearch(note, searchTerm));
+    }
+
     noteList.innerHTML = "";
+    toggleNotesEmptyState(notes.length === 0);
 
     notes.forEach(note => {
         const li = document.createElement("li");
@@ -159,9 +174,13 @@ function ensureActiveNotebook(createIfMissing = false) {
 }
 
 function syncEditorWithSelection() {
-    const visibleNotes = currentNotebookId
+    let visibleNotes = currentNotebookId
         ? noteService.getNotesByNotebookId(currentNotebookId)
         : noteService.getAllNotes();
+
+    if (searchTerm) {
+        visibleNotes = visibleNotes.filter(note => matchesSearch(note, searchTerm));
+    }
 
     const currentNoteIsVisible = visibleNotes.some(note => note.id === currentNoteId);
 
@@ -206,6 +225,22 @@ function handleCreateNotebook() {
     renderNotebooks();
     renderNotes();
     syncEditorWithSelection();
+}
+
+function matchesSearch(note, term) {
+    const title = note.title.toLowerCase();
+    const content = note.content.toLowerCase();
+
+    return title.includes(term) || content.includes(term);
+}
+
+function toggleNotesEmptyState(isEmpty) {
+    notesEmptyState.classList.toggle("hidden", !isEmpty);
+}
+
+function clearSearch() {
+    searchTerm = "";
+    noteSearch.value = "";
 }
 
 // Guardar cambios
