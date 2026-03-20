@@ -18,6 +18,9 @@ const noteTitle = document.getElementById("note-title");
 const noteContent = document.getElementById("note-content");
 const noteSearch = document.getElementById("note-search");
 const notesEmptyState = document.getElementById("notes-empty-state");
+const notesEmptyTitle = document.getElementById("notes-empty-title");
+const notesEmptyMessage = document.getElementById("notes-empty-message");
+const deleteNoteBtn = document.getElementById("delete-note");
 
 const newNotebookBtn = document.getElementById("new-notebook");
 const notebookList = document.getElementById("notebook-list");
@@ -67,6 +70,8 @@ function initNoteController() {
         loadNote(newNote.id);
     });
 
+    deleteNoteBtn.addEventListener("click", handleDeleteNote);
+
     noteSearch.addEventListener("input", (event) => {
         searchTerm = event.target.value.trim().toLowerCase();
         renderNotes();
@@ -107,16 +112,11 @@ function renderNotebooks() {
 
 // Renderizar notas (filtradas por cuaderno)
 function renderNotes() {
-    let notes = currentNotebookId
-        ? noteService.getNotesByNotebookId(currentNotebookId)
-        : noteService.getAllNotes();
-
-    if (searchTerm) {
-        notes = notes.filter(note => matchesSearch(note, searchTerm));
-    }
+    const notes = getVisibleNotes();
 
     noteList.innerHTML = "";
-    toggleNotesEmptyState(notes.length === 0);
+    renderEmptyState(notes.length === 0);
+    updateDeleteButtonState();
 
     notes.forEach(note => {
         const li = document.createElement("li");
@@ -152,6 +152,7 @@ function clearEditor() {
     currentNoteId = null;
     noteTitle.value = "";
     noteContent.value = "";
+    updateDeleteButtonState();
 }
 
 function ensureActiveNotebook(createIfMissing = false) {
@@ -174,13 +175,7 @@ function ensureActiveNotebook(createIfMissing = false) {
 }
 
 function syncEditorWithSelection() {
-    let visibleNotes = currentNotebookId
-        ? noteService.getNotesByNotebookId(currentNotebookId)
-        : noteService.getAllNotes();
-
-    if (searchTerm) {
-        visibleNotes = visibleNotes.filter(note => matchesSearch(note, searchTerm));
-    }
+    const visibleNotes = getVisibleNotes();
 
     const currentNoteIsVisible = visibleNotes.some(note => note.id === currentNoteId);
 
@@ -227,6 +222,45 @@ function handleCreateNotebook() {
     syncEditorWithSelection();
 }
 
+function handleDeleteNote() {
+    if (!currentNoteId) {
+        return;
+    }
+
+    const noteToDelete = noteService.getNoteById(currentNoteId);
+
+    if (!noteToDelete) {
+        syncEditorWithSelection();
+        return;
+    }
+
+    const confirmed = window.confirm(`Eliminar la nota "${noteToDelete.title || "Sin titulo"}"?`);
+
+    if (!confirmed) {
+        return;
+    }
+
+    const visibleNotes = getVisibleNotes();
+    const deletedNoteIndex = visibleNotes.findIndex(note => note.id === currentNoteId);
+    const deletedNoteId = currentNoteId;
+
+    noteService.deleteNote(deletedNoteId);
+
+    const remainingVisibleNotes = getVisibleNotes().filter(note => note.id !== deletedNoteId);
+    const nextNote = remainingVisibleNotes[deletedNoteIndex] || remainingVisibleNotes[deletedNoteIndex - 1] || null;
+
+    currentNoteId = nextNote ? nextNote.id : null;
+
+    renderNotes();
+
+    if (nextNote) {
+        loadNote(nextNote.id);
+        return;
+    }
+
+    clearEditor();
+}
+
 function matchesSearch(note, term) {
     const title = note.title.toLowerCase();
     const content = note.content.toLowerCase();
@@ -234,13 +268,71 @@ function matchesSearch(note, term) {
     return title.includes(term) || content.includes(term);
 }
 
-function toggleNotesEmptyState(isEmpty) {
-    notesEmptyState.classList.toggle("hidden", !isEmpty);
+function getVisibleNotes() {
+    let notes = currentNotebookId
+        ? noteService.getNotesByNotebookId(currentNotebookId)
+        : noteService.getAllNotes();
+
+    if (searchTerm) {
+        notes = notes.filter(note => matchesSearch(note, searchTerm));
+    }
+
+    return notes;
+}
+
+function updateDeleteButtonState() {
+    deleteNoteBtn.disabled = !currentNoteId;
 }
 
 function clearSearch() {
     searchTerm = "";
     noteSearch.value = "";
+}
+
+function renderEmptyState(isEmpty) {
+    if (!isEmpty) {
+        notesEmptyState.classList.add("hidden");
+        return;
+    }
+
+    const state = getEmptyStateContent();
+
+    notesEmptyTitle.textContent = state.title;
+    notesEmptyMessage.textContent = state.message;
+    notesEmptyState.classList.remove("hidden");
+}
+
+function getEmptyStateContent() {
+    const notebooks = notebookService.getAllNotebooks();
+    const notesInCurrentNotebook = currentNotebookId
+        ? noteService.getNotesByNotebookId(currentNotebookId)
+        : noteService.getAllNotes();
+
+    if (notebooks.length === 0) {
+        return {
+            title: "Aun no tienes cuadernos",
+            message: "Crea tu primer cuaderno para empezar a organizar tus notas."
+        };
+    }
+
+    if (searchTerm && notesInCurrentNotebook.length === 0) {
+        return {
+            title: "Este cuaderno aun esta vacio",
+            message: "Crea una nota nueva en este cuaderno para empezar a escribir."
+        };
+    }
+
+    if (searchTerm) {
+        return {
+            title: "Sin resultados",
+            message: `No encontramos notas para "${searchTerm}". Intenta con otra palabra clave.`
+        };
+    }
+
+    return {
+        title: "No hay notas en este cuaderno",
+        message: "Crea una nueva nota para empezar a construir conocimiento aqui."
+    };
 }
 
 // Guardar cambios

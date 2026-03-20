@@ -54,12 +54,27 @@ const noteService = (function () {
         return db.notes[noteIndex];
     }
 
+    function deleteNote(id) {
+        const db = storageService.getDB();
+        const noteExists = db.notes.some(note => note.id === id);
+
+        if (!noteExists) {
+            return false;
+        }
+
+        db.notes = db.notes.filter(note => note.id !== id);
+        storageService.saveDB(db);
+
+        return true;
+    }
+
     return {
         getAllNotes,
         getNoteById,
         getNotesByNotebookId,
         createNote,
-        updateNote
+        updateNote,
+        deleteNote
     };
 
 })();

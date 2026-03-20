@@ -50,7 +50,12 @@
 
         <div class="notes-header">
             <h2>Notas</h2>
-            <button id="new-note">+</button>
+            <div class="notes-actions">
+                <button id="delete-note" type="button" class="ghost-button" title="Eliminar nota activa">
+                    Eliminar
+                </button>
+                <button id="new-note">+</button>
+            </div>
         </div>
 
         <div class="notes-search">
@@ -63,9 +68,10 @@
         </div>
 
         <ul id="note-list"></ul>
-        <p id="notes-empty-state" class="empty-state hidden">
-            No hay notas que coincidan con la busqueda actual.
-        </p>
+        <div id="notes-empty-state" class="empty-state hidden">
+            <p id="notes-empty-title" class="empty-state-title"></p>
+            <p id="notes-empty-message" class="empty-state-message"></p>
+        </div>
 
     </section>
 
