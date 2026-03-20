@@ -63,6 +63,71 @@ body {
     margin-right: 4px;
 }
 
+.hidden {
+    display: none;
+}
+
+.notebook-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: #202020;
+    border: 1px solid #2f2f2f;
+    border-radius: 10px;
+}
+
+#notebook-name-input {
+    width: 100%;
+    background: #111111;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    color: #f1f1f1;
+    padding: 10px 12px;
+    font-size: 14px;
+    outline: none;
+}
+
+#notebook-name-input:focus {
+    border-color: #6b9bff;
+    box-shadow: 0 0 0 3px rgba(107, 155, 255, 0.15);
+}
+
+.notebook-form-actions {
+    display: flex;
+    gap: 8px;
+}
+
+#save-notebook,
+#cancel-notebook {
+    flex: 1;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+#save-notebook {
+    background: #6b9bff;
+    color: #ffffff;
+}
+
+#save-notebook:hover {
+    background: #5a82e0;
+}
+
+#cancel-notebook {
+    background: #2b2b2b;
+    color: #d4d4d4;
+}
+
+#cancel-notebook:hover {
+    background: #363636;
+}
+
 #notebook-list {
     list-style: none;
     margin-top: -5px; /* Ajuste fino de espaciado */
@@ -237,4 +302,31 @@ body {
 #note-list li.active {
     background-color: #2f3542;
     color: white;
+}
+
+@media (max-width: 900px) {
+    .app {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .sidebar,
+    .notes-panel {
+        width: 100%;
+        border-right: none;
+    }
+
+    .sidebar {
+        border-bottom: 1px solid #2a2a2a;
+    }
+
+    .notes-panel {
+        border-bottom: 1px solid #2a2a2a;
+    }
+
+    .editor {
+        padding: 24px 20px;
+        max-width: none;
+    }
 }

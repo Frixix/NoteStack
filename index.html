@@ -24,8 +24,21 @@
         <h1 class="logo">NOTESTACK</h1>
 
         <button id="new-notebook">
-            + Nuevo cuaderno
+            Nuevo cuaderno
         </button>
+
+        <div id="notebook-form" class="notebook-form hidden">
+            <input
+                type="text"
+                id="notebook-name-input"
+                placeholder="Nombre del cuaderno"
+                maxlength="50"
+            >
+            <div class="notebook-form-actions">
+                <button id="save-notebook" type="button">Crear</button>
+                <button id="cancel-notebook" type="button">Cancelar</button>
+            </div>
+        </div>
 
         <ul id="notebook-list"></ul>
 

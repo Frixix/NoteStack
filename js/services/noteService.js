@@ -5,6 +5,16 @@ const noteService = (function () {
         return db.notes;
     }
 
+    function getNoteById(id) {
+        const db = storageService.getDB();
+        return db.notes.find(note => note.id === id) || null;
+    }
+
+    function getNotesByNotebookId(notebookId) {
+        const db = storageService.getDB();
+        return db.notes.filter(note => note.notebookId === notebookId);
+    }
+
     function createNote(title, content, notebookId) {
 
         const db = storageService.getDB();
@@ -25,9 +35,31 @@ const noteService = (function () {
         return newNote;
     }
 
+    function updateNote(id, updates) {
+        const db = storageService.getDB();
+        const noteIndex = db.notes.findIndex(note => note.id === id);
+
+        if (noteIndex === -1) {
+            return null;
+        }
+
+        db.notes[noteIndex] = {
+            ...db.notes[noteIndex],
+            ...updates,
+            updatedAt: Date.now()
+        };
+
+        storageService.saveDB(db);
+
+        return db.notes[noteIndex];
+    }
+
     return {
         getAllNotes,
-        createNote
+        getNoteById,
+        getNotesByNotebookId,
+        createNote,
+        updateNote
     };
 
 })();
