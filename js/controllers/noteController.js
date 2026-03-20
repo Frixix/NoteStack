@@ -28,6 +28,8 @@ const notebookForm = document.getElementById("notebook-form");
 const notebookNameInput = document.getElementById("notebook-name-input");
 const saveNotebookBtn = document.getElementById("save-notebook");
 const cancelNotebookBtn = document.getElementById("cancel-notebook");
+const renameNotebookBtn = document.getElementById("rename-notebook");
+const deleteNotebookBtn = document.getElementById("delete-notebook");
 
 // Estado actual
 let currentNoteId = null;
@@ -45,6 +47,8 @@ function initNoteController() {
     newNotebookBtn.addEventListener("click", openNotebookForm);
     saveNotebookBtn.addEventListener("click", handleCreateNotebook);
     cancelNotebookBtn.addEventListener("click", closeNotebookForm);
+    renameNotebookBtn.addEventListener("click", handleRenameNotebook);
+    deleteNotebookBtn.addEventListener("click", handleDeleteNotebook);
     notebookNameInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             handleCreateNotebook();
@@ -108,6 +112,8 @@ function renderNotebooks() {
 
         notebookList.appendChild(li);
     });
+
+    updateNotebookActionState();
 }
 
 // Renderizar notas (filtradas por cuaderno)
@@ -222,6 +228,79 @@ function handleCreateNotebook() {
     syncEditorWithSelection();
 }
 
+function handleRenameNotebook() {
+    if (!currentNotebookId) {
+        return;
+    }
+
+    const activeNotebook = notebookService.getNotebookById(currentNotebookId);
+
+    if (!activeNotebook) {
+        ensureActiveNotebook();
+        renderNotebooks();
+        syncEditorWithSelection();
+        return;
+    }
+
+    const nextName = window.prompt("Nuevo nombre del cuaderno:", activeNotebook.name);
+
+    if (nextName === null) {
+        return;
+    }
+
+    const trimmedName = nextName.trim();
+
+    if (!trimmedName) {
+        window.alert("El nombre del cuaderno no puede estar vacio.");
+        return;
+    }
+
+    notebookService.updateNotebook(currentNotebookId, {
+        name: trimmedName
+    });
+
+    renderNotebooks();
+}
+
+function handleDeleteNotebook() {
+    if (!currentNotebookId) {
+        return;
+    }
+
+    const activeNotebook = notebookService.getNotebookById(currentNotebookId);
+
+    if (!activeNotebook) {
+        ensureActiveNotebook();
+        renderNotebooks();
+        syncEditorWithSelection();
+        return;
+    }
+
+    const confirmed = window.confirm(
+        `Eliminar el cuaderno "${activeNotebook.name}" y todas sus notas?`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const notebooks = notebookService.getAllNotebooks();
+    const currentNotebookIndex = notebooks.findIndex(nb => nb.id === currentNotebookId);
+
+    notebookService.deleteNotebook(currentNotebookId);
+
+    const remainingNotebooks = notebookService.getAllNotebooks();
+    const nextNotebook = remainingNotebooks[currentNotebookIndex] || remainingNotebooks[currentNotebookIndex - 1] || null;
+
+    currentNotebookId = nextNotebook ? nextNotebook.id : null;
+    currentNoteId = null;
+    clearSearch();
+
+    renderNotebooks();
+    renderNotes();
+    syncEditorWithSelection();
+}
+
 function handleDeleteNote() {
     if (!currentNoteId) {
         return;
@@ -282,6 +361,12 @@ function getVisibleNotes() {
 
 function updateDeleteButtonState() {
     deleteNoteBtn.disabled = !currentNoteId;
+}
+
+function updateNotebookActionState() {
+    const hasActiveNotebook = Boolean(currentNotebookId);
+    renameNotebookBtn.disabled = !hasActiveNotebook;
+    deleteNotebookBtn.disabled = !hasActiveNotebook;
 }
 
 function clearSearch() {

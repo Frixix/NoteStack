@@ -133,6 +133,17 @@ body {
     margin-top: -5px; /* Ajuste fino de espaciado */
 }
 
+.sidebar-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.sidebar-actions .ghost-button {
+    flex: 1;
+}
+
 /* Mejora: Items de la lista con padding más generoso y bordes redondeados */
 #notebook-list li {
     padding: 8px 12px;

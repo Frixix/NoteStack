@@ -22,6 +22,24 @@ const notebookService = {
         return newNotebook;
     },
 
+    updateNotebook(id, updates) {
+        const db = storageService.getDB();
+        const notebookIndex = db.notebooks.findIndex(nb => nb.id === id);
+
+        if (notebookIndex === -1) {
+            return null;
+        }
+
+        db.notebooks[notebookIndex] = {
+            ...db.notebooks[notebookIndex],
+            ...updates
+        };
+
+        storageService.saveDB(db);
+
+        return db.notebooks[notebookIndex];
+    },
+
     deleteNotebook(id) {
         const db = storageService.getDB();
 
